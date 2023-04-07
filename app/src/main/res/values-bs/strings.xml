@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Scannerate</string>
+    <string name="app_name">Text scanner pro</string>
     <string name="create_scan">Napravi sken</string>
     <string name="support">Podrška</string>
     <string name="privacy_policy">Pravila o privatnosti</string>

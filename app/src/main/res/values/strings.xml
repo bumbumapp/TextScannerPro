@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Scannerate</string>
+    <string name="app_name">Text scanner pro</string>
     <string name="create_scan">Create scan</string>
     <string name="placeholder_text_about_us_and_the_app" translatable="false">Placeholder text - about us and the app</string>
     <string name="support">Support</string>
