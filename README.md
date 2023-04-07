@@ -1,15 +1,4 @@
-# Scannerate - Ad free Text Recognition
-Android application built using Kotlin to extract text from images. 
-Uses Google's [ML kit library](https://developers.google.com/ml-kit/vision/text-recognition/android) under the hood.
-
-## Installation/Download
-Clone this repository or download the zip file and import into **Android Studio**.
-
-You can also download the app on the Play Store:
-
-<a href="https://play.google.com/store/apps/details?id=com.bumbumapps.studytextscan" target="_blank">
-<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="70"/></a>
-
+The main source code has been taken from [here](https://github.com/nikolaDrljaca/scannerate)
 ## License 
     Scannerate - Ad free text recoginition
     Copyright (C) 2021  DrBrosDev
