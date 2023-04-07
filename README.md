@@ -1,4 +1,4 @@
-
+The main source code has been taken from [here](https://github.com/OxygenCobalt/Auxio](https://github.com/nikolaDrljaca/scannerate))
 ## License 
     Scannerate - Ad free text recoginition
     Copyright (C) 2021  DrBrosDev
