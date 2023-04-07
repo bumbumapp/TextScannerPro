@@ -12,15 +12,6 @@
         <action
             android:id="@+id/action_homeScanFragment_to_detailScanFragment"
             app:destination="@id/detailScanFragment" />
-        <action
-            android:id="@+id/action_homeScanFragment_to_infoFragment"
-            app:destination="@id/infoFragment" />
-        <action
-            android:id="@+id/action_homeScanFragment_to_viewPagerFragment"
-            app:destination="@id/viewPagerFragment" />
-        <action
-            android:id="@+id/action_homeScanFragment_to_supportFragment"
-            app:destination="@id/supportFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailScanFragment"
@@ -29,35 +20,21 @@
         <action
             android:id="@+id/action_detailScanFragment_to_pdfDialogFragment"
             app:destination="@id/pdfDialogFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/infoFragment"
-        android:name="com.drbrosdev.studytextscan.ui.info.InfoFragment"
-        android:label="InfoFragment" >
         <action
-            android:id="@+id/action_infoFragment_to_licencesFragment"
-            app:destination="@id/licencesFragment" />
-        <action
-            android:id="@+id/action_infoFragment_to_supportFragment"
-            app:destination="@id/supportFragment" />
+            android:id="@+id/action_detailScanFragment_to_imagViewFragment"
+            app:destination="@id/imagViewFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/licencesFragment"
-        android:name="com.drbrosdev.studytextscan.ui.licences.LicencesFragment"
-        android:label="LicencesFragment" />
     <dialog
         android:id="@+id/pdfDialogFragment"
         android:name="com.drbrosdev.studytextscan.ui.pdfDialog.PdfDialogFragment"
         android:label="PdfDialogFragment" />
-    <fragment
-        android:id="@+id/viewPagerFragment"
-        android:name="com.drbrosdev.studytextscan.ui.onBoarding.ViewPagerFragment"
-        android:label="fragment_view_pager"
-        tools:layout="@layout/fragment_view_pager" />
 
-    <dialog
-        android:id="@+id/supportFragment"
-        android:name="com.drbrosdev.studytextscan.ui.support.SupportFragment"
-        android:label="fragment_support"
-        tools:layout="@layout/fragment_view_pager" />
+    <fragment
+        android:id="@+id/imagViewFragment"
+        android:name="com.drbrosdev.studytextscan.ui.detailscan.ImagViewFragment"
+        android:label="ImagViewFragment" >
+        <action
+            android:id="@+id/action_imagViewFragment_to_detailScanFragment"
+            app:destination="@id/detailScanFragment" />
+    </fragment>
 </navigation>

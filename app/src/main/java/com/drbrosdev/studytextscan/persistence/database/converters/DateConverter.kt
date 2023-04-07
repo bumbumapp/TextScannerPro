@@ -1,18 +1,13 @@
 package com.drbrosdev.studytextscan.persistence.database.converters
 
-import androidx.room.TypeConverter
-import java.util.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 
-class DateConverter {
 
-    @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
-    }
+object DateConverter {
 
-    @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun toBitmap(byteArray: ByteArray): Bitmap {
+        return BitmapFactory.decodeByteArray(byteArray,0,byteArray.size)
     }
 
 }

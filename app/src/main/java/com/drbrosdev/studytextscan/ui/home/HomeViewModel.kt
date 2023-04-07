@@ -1,8 +1,10 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.ImageLoader
 import com.drbrosdev.studytextscan.datastore.AppPreferences
 import com.drbrosdev.studytextscan.persistence.entity.FilteredTextModel
 import com.drbrosdev.studytextscan.persistence.entity.Scan
@@ -13,6 +15,7 @@ import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 class HomeViewModel(
     private val prefs: AppPreferences,
@@ -22,7 +25,6 @@ class HomeViewModel(
 ): ViewModel() {
     private val _events = Channel<HomeEvents>(capacity = 1)
     val events = _events.receiveAsFlow()
-
     private val isLoading = MutableStateFlow(true)
 
     private val scans = scanRepo.allScans
@@ -36,17 +38,6 @@ class HomeViewModel(
     private val listOfPinnedScans = scans
         .map { list -> list.filter { it.isPinned } }
 
-    private val supportCount = prefs.scanCount
-        .onEach {
-            val hasSeen = prefs.isFirstLaunch.first()
-            if (it % 6 == 0 && hasSeen) {
-                _events.send(HomeEvents.ShowSupportDialog)
-                prefs.incrementSupportCount()
-            }
-        }
-        .launchIn(viewModelScope)
-
-    val showReward = prefs.showReward
 
     val state = combine(
         isLoading,
@@ -60,22 +51,22 @@ class HomeViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), HomeUiState())
 
-    init {
-        initOnBoarding()
-    }
+
 
     fun handlePermissionDenied() = viewModelScope.launch {
         _events.send(HomeEvents.ShowPermissionInfo)
     }
 
-    private fun createScan(text: String, filteredTextList: List<Pair<String, String>>) = viewModelScope.launch {
+
+    private fun createScan(text: String, filteredTextList: List<Pair<String,String>>,byteArray: ByteArray) = viewModelScope.launch {
         if (text.isNotEmpty() or text.isNotBlank()) {
             val scan = Scan(
                 scanText = text,
                 dateCreated = getCurrentDateTime(),
                 dateModified = getCurrentDateTime(),
                 scanTitle = "",
-                isPinned = false
+                isPinned = false,
+                scannedImage =byteArray
             )
 
             val result = scanRepo.insertScan(scan)
@@ -109,37 +100,20 @@ class HomeViewModel(
         scanRepo.insertScan(scan)
     }
 
-    private fun initOnBoarding() = viewModelScope.launch {
-        val hasSeen = prefs.isFirstLaunch.first()
-        if (!hasSeen) {
-            _events.send(HomeEvents.ShowOnboarding).also {
-                prefs.incrementSupportCount()
-            }
-        }
-    }
 
-    fun handleScan(image: InputImage) {
+
+    fun handleScan(image: InputImage,byteArray: ByteArray) {
         showLoadingDialog()
         viewModelScope.launch {
             try {
-                val (completeText, filteredText) = scanTextFromImageUseCase(image)
-                createScan(completeText, filteredText)
+                val (completeText,filteredText) = scanTextFromImageUseCase(image)
+                createScan(completeText, filteredText,byteArray)
             } catch (e: Exception) {
-                Log.e("DEBUGn", "Error: ${e.localizedMessage}")
                 _events.send(HomeEvents.ShowErrorWhenScanning)
             }
         }
     }
 
-    fun showReward() {
-        viewModelScope.launch {
-            prefs.showReward()
-        }
-    }
 
-    fun rewardShown() {
-        viewModelScope.launch {
-            prefs.rewardShown()
-        }
-    }
+
 }

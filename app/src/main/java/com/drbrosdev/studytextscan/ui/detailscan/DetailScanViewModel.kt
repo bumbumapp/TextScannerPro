@@ -55,9 +55,9 @@ class DetailScanViewModel(
         current?.let { scanRepository.deleteScan(it) }
     }
 
-    fun onNavigateUp(title: String, content: String) {
+    fun onNavigateUp(content: String) {
         state.value.scan?.let {
-            if (it.scanTitle != title || it.scanText != content)
+            if ( it.scanText != content)
                 viewModelScope.launch {
                     _events.send(DetailScanEvents.ShowUnsavedChanges)
                 }
@@ -68,11 +68,11 @@ class DetailScanViewModel(
         }
     }
 
-    fun updateScan(title: String, content: String) {
+    fun updateScan(content: String) {
         viewModelScope.launch {
             state.value.scan?.let { scan ->
                 val updated = scan.copy(
-                    scanTitle = title,
+//                    scanTitle = title,
                     scanText = content,
                     dateModified = getCurrentDateTime()
                 )

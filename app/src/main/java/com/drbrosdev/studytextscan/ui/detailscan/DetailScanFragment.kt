@@ -1,23 +1,37 @@
 package com.drbrosdev.studytextscan.ui.detailscan
 
 import android.content.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.drbrosdev.studytextscan.Constant.BOTH
+import com.drbrosdev.studytextscan.Constant.HORIZONTAL
+import com.drbrosdev.studytextscan.Constant.VERTICAL
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.anim.InsetsWithKeyboardAnimationCallback
 import com.drbrosdev.studytextscan.anim.InsetsWithKeyboardCallback
 import com.drbrosdev.studytextscan.databinding.FragmentScanDetailBinding
+import com.drbrosdev.studytextscan.datastore.AppPreferences
+import com.drbrosdev.studytextscan.datastore.datastore
+import com.drbrosdev.studytextscan.persistence.database.converters.DateConverter.toBitmap
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 import java.util.*
@@ -38,6 +52,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateWindowInsets(binding.root)
+        val datastore = AppPreferences(requireContext().datastore)
 
         val insetsWithKeyboardCallback = InsetsWithKeyboardCallback(requireActivity().window)
         ViewCompat.setWindowInsetsAnimationCallback(binding.root, insetsWithKeyboardCallback)
@@ -53,13 +68,82 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                         getString(R.string.text_date_created, dateAsString(scan.dateCreated))
                     textViewDateModified.text =
                         getString(R.string.text_date_modified, dateAsString(scan.dateModified))
+
+
                     editTextScanContent.setText(scan.scanText, TextView.BufferType.EDITABLE)
-                    editTextScanTitle.setText(scan.scanTitle, TextView.BufferType.EDITABLE)
+                    editTextScanContent.movementMethod=null
+                    editTextScanContent2.setText(scan.scanText, TextView.BufferType.EDITABLE)
+                    imageViewScanned.setImageBitmap(toBitmap(scan.scannedImage))
+                    lifecycleScope.launch{
+                        if(datastore.isHorizontal.first()== BOTH) {
+                            binding.scrollView.visibility=View.VISIBLE
+                            binding.editTextScanContent2.visibility=View.INVISIBLE
+                        }
+                        if(datastore.isHorizontal.first()== HORIZONTAL) {
+                            binding.scrollView.visibility=View.INVISIBLE
+                            binding.editTextScanContent2.visibility=View.VISIBLE
+                           editTextScanContent2.setHorizontallyScrolling(true)
+                        }
+                        if(datastore.isHorizontal.first()== VERTICAL){
+                            binding.scrollView.visibility=View.INVISIBLE
+                            binding.editTextScanContent2.visibility=View.VISIBLE
+                            editTextScanContent2.setHorizontallyScrolling(false)
+                        }
+                    }
+
 
                     val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
                         else getColor(R.color.light_blue)
                     imageViewPin.setColorFilter(pinColor)
+                    binding.cardImageViewScanned.setOnClickListener {
+                        val arg = bundleOf("scan_id" to scan.scanId.toInt())
+                        findNavController().navigate(R.id.action_detailScanFragment_to_imagViewFragment,arg)
+                    }
+                    binding.settings.setOnClickListener {
+                        val popup =PopupMenu(requireContext(), it);
+                        popup.setOnMenuItemClickListener(object:PopupMenu.OnMenuItemClickListener{
+                            override fun onMenuItemClick(menu: MenuItem?): Boolean {
+                                when (menu?.itemId) {
+                                    R.id.horizontol -> {
+                                        binding.scrollView.visibility=View.INVISIBLE
+                                        binding.editTextScanContent2.visibility=View.VISIBLE
+                                        binding.editTextScanContent2.setHorizontallyScrolling(true)
+                                        lifecycleScope.launch{
+                                            datastore.setViewNotHorizontal(HORIZONTAL)
+                                        }
+                                        viewModel.updateScan(editTextScanContent.text.toString())
+                                        return true
+                                    }
+                                    R.id.vertical -> {
+                                        binding.scrollView.visibility=View.INVISIBLE
+                                        binding.editTextScanContent2.visibility=View.VISIBLE
+                                        binding.editTextScanContent2.setHorizontallyScrolling(false)
+                                        lifecycleScope.launch{
+                                            datastore.setViewNotHorizontal(VERTICAL)
+                                        }
+                                        viewModel.updateScan(editTextScanContent2.text.toString())
 
+                                        return true
+                                    }
+                                    R.id.both-> {
+                                        binding.scrollView.visibility=View.VISIBLE
+                                        binding.editTextScanContent2.visibility=View.INVISIBLE
+                                        lifecycleScope.launch{
+                                            datastore.setViewNotHorizontal(BOTH)
+                                        }
+                                        viewModel.updateScan(editTextScanContent2.text.toString())
+
+                                        return true
+                                    }
+
+                                }
+                                return true
+                            }
+
+                        });
+                        popup.inflate(R.menu.view);
+                        popup.show()
+                    }
                     recyclerViewChips.withModels {
                         state.filteredTextModels.let {
                             it.forEach { model ->
@@ -93,7 +177,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         collectFlow(viewModel.events) {
             when (it) {
                 is DetailScanEvents.ShowSoftwareKeyboardOnFirstLoad -> {
-                    showKeyboardOnEditText(binding.editTextScanTitle)
+//                    showKeyboardOnEditText(binding.editTextScanTitle)
                 }
                 is DetailScanEvents.ShowScanUpdated -> {
                     showSnackbarShort(
@@ -107,9 +191,18 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                         message = getString(R.string.unsaved_changes),
                         onPositiveClick = {
                             binding.apply {
+                                var editText: String? =null
+                                lifecycleScope.launch{
+
+                                    editText = if (datastore.isHorizontal.first()== VERTICAL){
+                                        editTextScanContent2.text.toString()
+                                    } else{
+                                        editTextScanContent.text.toString()
+                                    }
+                                }
+
                                 viewModel.updateScan(
-                                    title = editTextScanTitle.text.toString(),
-                                    content = editTextScanContent.text.toString()
+                                    content = editText!!
                                 )
                             }
                             hideKeyboard()
@@ -134,12 +227,21 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
          */
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             binding.apply {
+                var editText1: String? =null
+                lifecycleScope.launch{
+
+                    editText1 = if (datastore.isHorizontal.first()== VERTICAL){
+                        editTextScanContent2.text.toString()
+                    } else{
+                        editTextScanContent.text.toString()
+                    }
+                }
                 viewModel.onNavigateUp(
-                    title = editTextScanTitle.text.toString(),
-                    content = editTextScanContent.text.toString()
+                    content = editText1!!
                 )
             }
         }
+
 
         /*
         Click events
@@ -151,17 +253,33 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewSave.setOnClickListener {
+                var editText: String? =null
+                lifecycleScope.launch{
+
+                    editText = if (datastore.isHorizontal.first()== VERTICAL){
+                        editTextScanContent2.text.toString()
+                    } else{
+                        editTextScanContent.text.toString()
+                    }
+                }
                 viewModel.updateScan(
-                    title = editTextScanTitle.text.toString(),
-                    content = editTextScanContent.text.toString()
+                    content = editText!!
                 )
                 hideKeyboard()
             }
 
             imageViewBack.setOnClickListener {
+                var editText: String? =null
+                lifecycleScope.launch{
+
+                    editText = if (datastore.isHorizontal.first()== VERTICAL){
+                        editTextScanContent2.text.toString()
+                    } else{
+                        editTextScanContent.text.toString()
+                    }
+                }
                 viewModel.onNavigateUp(
-                    title = editTextScanTitle.text.toString(),
-                    content = editTextScanContent.text.toString()
+                    content = editText!!
                 )
             }
 
@@ -179,7 +297,16 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             imageViewCopy.setOnClickListener {
                 val clipboardManager =
                     requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("raw_data", editTextScanContent.text.toString())
+                var editText: String? =null
+                lifecycleScope.launch{
+
+                    editText = if (datastore.isHorizontal.first()== VERTICAL){
+                        editTextScanContent2.text.toString()
+                    } else{
+                        editTextScanContent.text.toString()
+                    }
+                }
+                val clip = ClipData.newPlainText("raw_data", editText)
                 clipboardManager.setPrimaryClip(clip)
                 showSnackbarShort(
                     message = getString(R.string.copied_clip),
@@ -188,9 +315,18 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewShare.setOnClickListener {
+                var editText: String? =null
+                lifecycleScope.launch{
+
+                    editText = if (datastore.isHorizontal.first()== VERTICAL){
+                        editTextScanContent2.text.toString()
+                    } else{
+                        editTextScanContent.text.toString()
+                    }
+                }
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, editTextScanContent.text.toString())
+                    putExtra(Intent.EXTRA_TEXT, editText)
                     type = "text/plain"
                 }
                 val intent = Intent.createChooser(shareIntent, null)
@@ -296,3 +432,5 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         }
     }
 }
+
+

@@ -6,13 +6,13 @@
 
     <color name="icon_color">#ffffff</color>
 
-    <color name="background">#00213d</color>
+    <color name="background">#221f35</color>
 
-    <color name="bottom_bar_color">#01579b</color>
+    <color name="bottom_bar_color">#18152C</color>
     <color name="bottom_icon_color">#e1f5fe</color>
     <color name="detail_text_title_color">#e1f5fe</color>
 
-    <color name="scan_item_background">#01579b</color>
+    <color name="scan_item_background">#18152C</color>
     <color name="scan_item_text">#e1f5fe</color>
 
 </resources>

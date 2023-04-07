@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/both"
+        android:title="Vertical-Horizontal"
+        />
+    <item android:id="@+id/horizontol"
+        android:title="Scroll Horizontal" />
+    <item android:id="@+id/vertical"
+        android:title="Scroll Vertical"
+       />
+
+</menu>

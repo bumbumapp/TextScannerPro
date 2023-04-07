@@ -32,6 +32,49 @@
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/onboarding_item.xml" value="0.21981981981981982" />
         <entry key="..\:/AndroidStudioProjects/StudyTextScan/app/src/main/res/layout/scan_list_item.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/scannerate/app/src/main/res/layout/fragment_scan_home.xml" value="0.32037037037037036" />
+        <entry key="..\:/Users/Durkhan/Play store projects/scannerate/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1335" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/background_scan_image.xml" value="0.1035" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/bottom_bar_background.xml" value="0.1345" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/dialog_background.xml" value="0.1035" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_default_monochrome.xml" value="0.138" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_more.xml" value="0.145" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_arrow_back_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_arrow_downward_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_broken_image_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_camera_alt_24.xml" value="0.145" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_content_copy_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_done_24.xml" value="0.138" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_edit_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_info_24.xml" value="0.1345" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_photo_24.xml" value="0.1345" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_picture_as_pdf_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_record_voice_over_24.xml" value="0.145" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_settings_24.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_round_share_24.xml" value="0.1035" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/ic_scan_24.xml" value="0.1035" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/info_section_background.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/drawable/save_button_background.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/activity_main.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/dialog_info.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/dialog_loading.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_info.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_on_boarding_screen1.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_on_boarding_screen2.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_pdf_dialog.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_scan_detail.xml" value="0.17437722419928825" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_scan_home.xml" value="0.10099637681159421" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/fragment_view_pager.xml" value="0.26875" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/image_viewlayout.xml" value="0.1265625" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/licence_list_item.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/list_item.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/model_chip.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/model_pinned_header.xml" value="0.26875" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/model_scan_header.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/model_scan_top_bar.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/layout/scan_list_item.xml" value="0.1" />
+        <entry key="..\:/Users/Durkhan/Studi oProjects/scannerate/app/src/main/res/menu/view.xml" value="0.20078125" />
         <entry key="..\:/Users/Nikola Drljaca/AndroidStudioProjects/text-recognition-app/app/src/main/res/layout/fragment_info.xml" value="0.11347517730496454" />
         <entry key="..\:/Users/Nikola Drljaca/AndroidStudioProjects/text-recognition-app/app/src/main/res/layout/fragment_on_boarding_screen1.xml" value="0.24559777571825764" />
         <entry key="..\:/Users/Nikola Drljaca/AndroidStudioProjects/text-recognition-app/app/src/main/res/layout/fragment_on_boarding_screen2.xml" value="0.11041666666666666" />

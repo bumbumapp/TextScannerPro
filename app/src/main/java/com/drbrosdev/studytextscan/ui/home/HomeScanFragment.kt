@@ -1,12 +1,16 @@
 package com.drbrosdev.studytextscan.ui.home
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +19,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
@@ -23,21 +28,18 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.FragmentScanHomeBinding
-import com.drbrosdev.studytextscan.service.billing.BillingClientService
-import com.drbrosdev.studytextscan.service.billing.PurchaseResult
-import com.drbrosdev.studytextscan.ui.home.reward.setupComposeSnackbar
 import com.drbrosdev.studytextscan.util.*
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+
 
 class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
     private val binding: FragmentScanHomeBinding by viewBinding(FragmentScanHomeBinding::bind)
     private val viewModel: HomeViewModel by sharedViewModel()
-    private val billingClient: BillingClientService by inject()
-
     private val selectImageRequest = registerForActivityResult(CropImageContract()) {
         if (it.isSuccessful) {
             it.uriContent?.let { handleImage(it) }
@@ -66,7 +68,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
     override fun onResume() {
         super.onResume()
-        billingClient.retryToConsumePurchases()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,12 +77,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         view.doOnPreDraw { startPostponedEnterTransition() }
         val loadingDialog = createLoadingDialog()
 
-        collectFlow(billingClient.purchaseFlow) {
-            when (it) {
-                is PurchaseResult.Failure -> Unit
-                is PurchaseResult.Success -> viewModel.showReward()
-            }
-        }
 
         collectFlow(viewModel.state) { state ->
             binding.apply {
@@ -94,7 +89,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                             exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
                             reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
-                            findNavController().navigate(R.id.action_homeScanFragment_to_infoFragment)
                         }
                     }
                     scanHeader {
@@ -124,9 +118,30 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                         arg
                                     )
                                 }
+                                copyClicked {
+                                    val clipboardManager =
+                                        requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("raw_data", it.scanText)
+                                    clipboardManager.setPrimaryClip(clip)
+                                    showSnackbarShort(
+                                        message = getString(R.string.copied_clip),
+
+                                        )
+                                }
+                                shareIt {
+                                    val shareIntent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, it.scanText)
+                                        type = "text/plain"
+                                    }
+                                    val intent = Intent.createChooser(shareIntent, null)
+                                    startActivity(intent)
+                                }
+
                             }
                         }
                     }
+
 
                     if (state.scans.isNotEmpty()) {
                         listHeader {
@@ -147,8 +162,28 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                         arg
                                     )
                                 }
+                                copyClicked {
+                                    val clipboardManager =
+                                        requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("raw_data", it.scanText)
+                                    clipboardManager.setPrimaryClip(clip)
+                                    showSnackbarShort(
+                                        message = getString(R.string.copied_clip),
+
+                                    )
+                                }
+                                shareIt {
+                                    val shareIntent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, it.scanText)
+                                        type = "text/plain"
+                                    }
+                                    val intent = Intent.createChooser(shareIntent, null)
+                                    startActivity(intent)
+                                }
                             }
                         }
+
                     }
                 }
             }
@@ -241,7 +276,6 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     }
                 }
                 is HomeEvents.ShowOnboarding -> {
-                    findNavController().navigate(R.id.action_homeScanFragment_to_viewPagerFragment)
                 }
                 is HomeEvents.ShowErrorWhenScanning -> {
                     loadingDialog.dismiss()
@@ -254,15 +288,11 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     showCameraPermissionInfoDialog()
                 }
                 is HomeEvents.ShowSupportDialog -> {
-                    findNavController().navigate(R.id.action_homeScanFragment_to_supportFragment)
                 }
             }
         }
 
-        binding.setupComposeSnackbar(
-            rewardCount = viewModel.showReward,
-            onRewardShown = { viewModel.rewardShown() }
-        )
+
 
         binding.apply {
             recyclerViewScans.apply {
@@ -291,7 +321,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     selectImageRequest.launch(cropImageGalleryOptions)
                 }
                 animationView.repeatCount = 2
+
             }
+
         }
 
         requireActivity().apply {
@@ -315,6 +347,31 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
 
     private fun handleImage(uri: Uri) {
         val image = InputImage.fromFilePath(requireContext(), uri)
-        viewModel.handleScan(image)
+
+        lifecycleScope.launch{
+            try {
+                viewModel.handleScan(image,getBytesArrayFromURI(uri)!!)
+            }catch (e:Exception){
+                Log.d("TAG","bitmap__"+e.message.toString())
+            }
+
+             }
     }
+    private fun getBytesArrayFromURI(uri: Uri?): ByteArray? {
+        try {
+            val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri!!)
+            val byteBuffer = ByteArrayOutputStream()
+            val bufferSize = 1024
+            val buffer = ByteArray(bufferSize)
+            var len = 0
+            while (inputStream!!.read(buffer).also { len = it } != -1) {
+                byteBuffer.write(buffer, 0, len)
+            }
+            return byteBuffer.toByteArray()
+        } catch (e:Exception) {
+            Log.d("TAG","bitmap_"+e.message.toString())
+        }
+        return null
+    }
+
 }

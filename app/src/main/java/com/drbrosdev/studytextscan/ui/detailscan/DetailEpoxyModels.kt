@@ -6,6 +6,7 @@ import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.ModelChipBinding
 import com.drbrosdev.studytextscan.epoxy.ViewBindingKotlinModel
 import com.drbrosdev.studytextscan.persistence.entity.FilteredTextModel
+import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.google.android.material.card.MaterialCardView
 
 @EpoxyModelClass
@@ -24,5 +25,7 @@ abstract class ChipEpoxyModel : ViewBindingKotlinModel<ModelChipBinding>(R.layou
         initCard(chipCard)
         chipCard.setOnClickListener { onModelClick() }
         textViewChip.text = model.content
+
+
     }
 }

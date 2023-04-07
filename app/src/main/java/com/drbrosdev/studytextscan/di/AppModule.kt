@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.drbrosdev.studytextscan.datastore.AppPreferences
 import com.drbrosdev.studytextscan.datastore.datastore
 import com.drbrosdev.studytextscan.persistence.database.ApplicationDatabase
-import com.drbrosdev.studytextscan.service.billing.BillingClientService
 import com.drbrosdev.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.TextFilterServiceImpl
 import com.drbrosdev.studytextscan.service.textFilter.TextFilterService
@@ -32,8 +31,6 @@ private fun provideFilterTextService() =
 private fun provideScanTextFromImageUseCase(filterTextService: TextFilterService) =
     ScanTextFromImageUseCase(filterTextService)
 
-private fun provideBillingService(context: Context) =
-    BillingClientService(context)
 
 val appModule = module {
     single { provideDatabase(context = androidContext()) }
@@ -41,5 +38,4 @@ val appModule = module {
     factory { providePreferences(androidContext()) }
     single { provideFilterTextService() } bind TextFilterService::class
     factory { provideScanTextFromImageUseCase(get()) }
-    single { provideBillingService(androidContext()) }
 }

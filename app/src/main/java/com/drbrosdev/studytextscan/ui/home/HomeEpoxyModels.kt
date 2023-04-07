@@ -1,13 +1,23 @@
 package com.drbrosdev.studytextscan.ui.home
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.drbrosdev.studytextscan.R
 import com.drbrosdev.studytextscan.databinding.*
 import com.drbrosdev.studytextscan.epoxy.ViewBindingKotlinModel
+import com.drbrosdev.studytextscan.persistence.database.converters.DateConverter.toBitmap
 import com.drbrosdev.studytextscan.persistence.entity.Scan
 import com.drbrosdev.studytextscan.util.dateAsString
+import com.drbrosdev.studytextscan.util.showSnackbarShort
+import kotlin.coroutines.coroutineContext
 
 @EpoxyModelClass
 abstract class ScanTopBarEpoxyModel :
@@ -17,7 +27,7 @@ abstract class ScanTopBarEpoxyModel :
     lateinit var onInfoClicked: () -> Unit
 
     override fun ModelScanTopBarBinding.bind() {
-        imageViewInfo.setOnClickListener { onInfoClicked() }
+
     }
 }
 
@@ -43,15 +53,29 @@ abstract class ScanListItemEpoxyModel :
     @EpoxyAttribute
     lateinit var onScanClicked: (Scan) -> Unit
 
+    @EpoxyAttribute
+    lateinit var copyClicked:(Scan)-> Unit
+
+    @EpoxyAttribute
+    lateinit var shareIt:(Scan)-> Unit
+
+
     override fun ScanListItemBinding.bind() {
-        val title = if (scan.scanTitle.isEmpty()) scan.scanText.lines()[0]
-        else scan.scanTitle
+     
+
 
         textViewDate.text = dateAsString(scan.dateModified)
-        textViewTitle.text = title
+        textViewDate.setOnClickListener {
+            onScanClicked(scan)
+        }
+
+        card.setOnClickListener{onScanClicked(scan)}
+       imageViewCopy.setOnClickListener { copyClicked(scan) }
         textViewContent.text = scan.scanText
-        card.setOnClickListener { onScanClicked(scan) }
+        textViewContent.setOnClickListener { onScanClicked(scan) }
         imageViewPinned.isVisible = scan.isPinned
+        imageViewShare.setOnClickListener { shareIt(scan) }
+        imageViewScanned.setImageBitmap(toBitmap(scan.scannedImage))
     }
 }
 

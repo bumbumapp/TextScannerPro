@@ -16,9 +16,7 @@ import com.drbrosdev.studytextscan.persistence.entity.Scan
     ],
     version = 4
 )
-@TypeConverters(
-    DateConverter::class
-)
+
 abstract class ApplicationDatabase : RoomDatabase() {
     abstract val scanDao: ScanDao
     abstract val filteredTextModelDao: FilteredTextModelDao
