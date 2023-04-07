@@ -7,6 +7,7 @@
     android:background="@color/background"
     android:clipToPadding="false">
 
+
     <com.airbnb.epoxy.EpoxyRecyclerView
         android:id="@+id/recycler_view_scans"
         android:layout_width="match_parent"
@@ -79,5 +80,13 @@
         app:srcCompat="@drawable/ic_round_camera_alt_24"
         app:tint="@color/heavy_blue"
         tools:ignore="SpeakableTextPresentCheck" />
-
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/ic_info"
+        app:tint="@color/heavy_blue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

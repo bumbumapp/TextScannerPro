@@ -7,12 +7,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -77,6 +84,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         view.doOnPreDraw { startPostponedEnterTransition() }
         val loadingDialog = createLoadingDialog()
 
+        binding.info.setOnClickListener {
+            showAboutDialog()
+        }
 
         collectFlow(viewModel.state) { state ->
             binding.apply {
@@ -373,5 +383,35 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
         return null
     }
+   private fun showAboutDialog(){
+       Log.d("jbsfsld","sdjsd")
+       val dialog= android.app.Dialog(requireContext())
+       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+       dialog.setContentView(R.layout.dialog_about);
+       dialog.setCancelable(true)
+       val lp = WindowManager.LayoutParams()
+       lp.copyFrom(dialog.window!!.attributes)
 
+       lp.width = WindowManager.LayoutParams.MATCH_PARENT
+       lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+       val back = ColorDrawable(Color.TRANSPARENT)
+       val margin = 20
+       val inset = InsetDrawable(back, margin)
+       dialog.window?.setBackgroundDrawable(inset)
+       dialog.findViewById<Button>(R.id.bt_licence).setOnClickListener {
+           val url = "https://github.com/nikolaDrljaca/scannerate/blob/main/LICENSE"
+           val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+           startActivity(urlIntent)
+       }
+       dialog.findViewById<ImageButton>(R.id.bt_close).setOnClickListener {
+           dialog.dismiss()
+       }
+       dialog.findViewById<Button>(R.id.app_source_code).setOnClickListener {
+           val url = "https://github.com/bumbumapp/TextScannerPro"
+           val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+           startActivity(urlIntent)
+       }
+       dialog.window?.attributes = lp;
+       dialog.show()
+   }
 }
