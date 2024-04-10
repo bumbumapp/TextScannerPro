@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "684310343727",
+    "project_id": "text-scanner-7d08c",
+    "storage_bucket": "text-scanner-7d08c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684310343727:android:279442b31a053bd6fc16da",
+        "android_client_info": {
+          "package_name": "com.bumbumapps.textscannerpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684310343727-kka10nsee6a0vpdfqfrurng8l1cb9js1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9MmjG2nLI10aJg3JaUeTNvHiNJrHIPHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684310343727-kka10nsee6a0vpdfqfrurng8l1cb9js1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

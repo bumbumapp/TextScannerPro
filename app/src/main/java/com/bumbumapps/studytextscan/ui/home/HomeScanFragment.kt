@@ -1,6 +1,7 @@
 package com.bumbumapps.studytextscan.ui.home
 
 import android.Manifest
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -20,7 +21,9 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -30,12 +33,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.bumbumapps.studytextscan.AdsLoader
+import com.bumbumapps.studytextscan.Globals
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.bumbumapps.studytextscan.R
+import com.bumbumapps.studytextscan.Timers
 import com.bumbumapps.studytextscan.databinding.FragmentScanHomeBinding
 import com.bumbumapps.studytextscan.util.*
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.launch
@@ -119,14 +126,36 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 id(it.scanId)
                                 scan(it)
                                 onScanClicked {
-                                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                    reenterTransition =
-                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                    findNavController().navigate(
-                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                        arg
-                                    )
+                                    if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
+                                        AdsLoader.mInterstitialAd?.show(context as Activity)
+                                        AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                                            override fun onAdDismissedFullScreenContent() {
+
+                                                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                                                    reenterTransition =
+                                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                                    findNavController().navigate(
+                                                        R.id.action_homeScanFragment_to_detailScanFragment,
+                                                        arg
+                                                    )
+                                                    Globals.TIMER_FINISHED =false
+                                                    Timers.timer().start()
+                                                    AdsLoader.displayInterstitial(requireContext())
+                                                }
+
+
+                                        }
+                                    }else{
+                                        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                                        reenterTransition =
+                                            MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                        val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                        findNavController().navigate(
+                                            R.id.action_homeScanFragment_to_detailScanFragment,
+                                            arg
+                                        ) }
+
                                 }
                                 copyClicked {
                                     val clipboardManager =
@@ -163,14 +192,33 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 id(it.scanId)
                                 scan(it)
                                 onScanClicked {
-                                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                    reenterTransition =
-                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                    findNavController().navigate(
-                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                        arg
-                                    )
+                                    if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
+                                        AdsLoader.mInterstitialAd?.show(context as Activity)
+                                        AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                                            override fun onAdDismissedFullScreenContent() {
+                                                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                                                reenterTransition =
+                                                    MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                                val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                                findNavController().navigate(
+                                                    R.id.action_homeScanFragment_to_detailScanFragment,
+                                                    arg
+                                                )
+                                                Globals.TIMER_FINISHED =false
+                                                Timers.timer().start()
+                                                AdsLoader.displayInterstitial(requireContext())
+                                            }
+                                        }
+                                    }else{
+                                        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                                        reenterTransition =
+                                            MaterialSharedAxis(MaterialSharedAxis.X, false)
+                                        val arg = bundleOf("scan_id" to it.scanId.toInt())
+                                        findNavController().navigate(
+                                            R.id.action_homeScanFragment_to_detailScanFragment,
+                                            arg
+                                        )                                    }
+
                                 }
                                 copyClicked {
                                     val clipboardManager =
@@ -180,7 +228,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                     showSnackbarShort(
                                         message = getString(R.string.copied_clip),
 
-                                    )
+                                        )
                                 }
                                 shareIt {
                                     val shareIntent = Intent().apply {
@@ -259,12 +307,20 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         collectFlow(viewModel.events) { homeEvents ->
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
-                    loadingDialog.dismiss()
-                    val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
-                    findNavController().navigate(
-                        R.id.action_homeScanFragment_to_detailScanFragment,
-                        arg
-                    )
+                    if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
+                        AdsLoader.mInterstitialAd?.show(context as Activity)
+                        AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                dialogDismiss(loadingDialog,homeEvents)
+                                Globals.TIMER_FINISHED =false
+                                Timers.timer().start()
+                                AdsLoader.displayInterstitial(requireContext())
+                            }
+                        }
+                    }else{
+                        dialogDismiss(loadingDialog,homeEvents)
+                    }
+
                 }
                 is HomeEvents.ShowLoadingDialog -> {
                     loadingDialog.show()
@@ -316,7 +372,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     when {
                         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                                 == PackageManager.PERMISSION_GRANTED -> {
-                                    //use the api that needs the permission
+                            //use the api that needs the permission
                             selectImageRequest.launch(cropImageCameraOptions)
                         }
                         else -> {
@@ -345,6 +401,18 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
     }
 
+    private fun dialogDismiss(
+        loadingDialog: AlertDialog,
+        homeEvents: HomeEvents.ShowCurrentScanSaved
+    ) {
+        loadingDialog.dismiss()
+        val arg = bundleOf("scan_id" to homeEvents.id, "is_created" to 1)
+        findNavController().navigate(
+            R.id.action_homeScanFragment_to_detailScanFragment,
+            arg
+        )
+    }
+
     private fun handleIntent(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
             handleImage(it)
@@ -365,7 +433,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                 Log.d("TAG","bitmap__"+e.message.toString())
             }
 
-             }
+        }
     }
     private fun getBytesArrayFromURI(uri: Uri?): ByteArray? {
         try {
@@ -383,35 +451,35 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         }
         return null
     }
-   private fun showAboutDialog(){
-       Log.d("jbsfsld","sdjsd")
-       val dialog= android.app.Dialog(requireContext())
-       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-       dialog.setContentView(R.layout.dialog_about);
-       dialog.setCancelable(true)
-       val lp = WindowManager.LayoutParams()
-       lp.copyFrom(dialog.window!!.attributes)
+    private fun showAboutDialog(){
+        Log.d("jbsfsld","sdjsd")
+        val dialog= android.app.Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_about);
+        dialog.setCancelable(true)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialog.window!!.attributes)
 
-       lp.width = WindowManager.LayoutParams.MATCH_PARENT
-       lp.height = WindowManager.LayoutParams.WRAP_CONTENT
-       val back = ColorDrawable(Color.TRANSPARENT)
-       val margin = 20
-       val inset = InsetDrawable(back, margin)
-       dialog.window?.setBackgroundDrawable(inset)
-       dialog.findViewById<Button>(R.id.bt_licence).setOnClickListener {
-           val url = "https://github.com/nikolaDrljaca/scannerate/blob/main/LICENSE"
-           val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-           startActivity(urlIntent)
-       }
-       dialog.findViewById<ImageButton>(R.id.bt_close).setOnClickListener {
-           dialog.dismiss()
-       }
-       dialog.findViewById<Button>(R.id.app_source_code).setOnClickListener {
-           val url = "https://github.com/bumbumapp/TextScannerPro"
-           val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-           startActivity(urlIntent)
-       }
-       dialog.window?.attributes = lp;
-       dialog.show()
-   }
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        val back = ColorDrawable(Color.TRANSPARENT)
+        val margin = 20
+        val inset = InsetDrawable(back, margin)
+        dialog.window?.setBackgroundDrawable(inset)
+        dialog.findViewById<Button>(R.id.bt_licence).setOnClickListener {
+            val url = "https://github.com/nikolaDrljaca/scannerate/blob/main/LICENSE"
+            val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(urlIntent)
+        }
+        dialog.findViewById<ImageButton>(R.id.bt_close).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.findViewById<Button>(R.id.app_source_code).setOnClickListener {
+            val url = "https://github.com/bumbumapp/TextScannerPro"
+            val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(urlIntent)
+        }
+        dialog.window?.attributes = lp;
+        dialog.show()
+    }
 }

@@ -1,5 +1,6 @@
 package com.bumbumapps.studytextscan.ui.detailscan
 
+import android.app.Activity
 import android.content.*
 import android.net.Uri
 import android.os.Bundle
@@ -14,10 +15,13 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumbumapps.studytextscan.AdsLoader
 import com.bumbumapps.studytextscan.Constant.BOTH
 import com.bumbumapps.studytextscan.Constant.HORIZONTAL
 import com.bumbumapps.studytextscan.Constant.VERTICAL
+import com.bumbumapps.studytextscan.Globals
 import com.bumbumapps.studytextscan.R
+import com.bumbumapps.studytextscan.Timers
 import com.bumbumapps.studytextscan.anim.InsetsWithKeyboardAnimationCallback
 import com.bumbumapps.studytextscan.anim.InsetsWithKeyboardCallback
 import com.bumbumapps.studytextscan.databinding.FragmentScanDetailBinding
@@ -26,6 +30,8 @@ import com.bumbumapps.studytextscan.datastore.datastore
 import com.bumbumapps.studytextscan.persistence.database.converters.DateConverter.toBitmap
 import com.bumbumapps.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.bumbumapps.studytextscan.util.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.material.transition.MaterialSharedAxis
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -79,7 +85,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                         if(datastore.isHorizontal.first()== HORIZONTAL) {
                             binding.scrollView.visibility=View.INVISIBLE
                             binding.editTextScanContent2.visibility=View.VISIBLE
-                           editTextScanContent2.setHorizontallyScrolling(true)
+                            editTextScanContent2.setHorizontallyScrolling(true)
                         }
                         if(datastore.isHorizontal.first()== VERTICAL){
                             binding.scrollView.visibility=View.INVISIBLE
@@ -90,7 +96,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 
 
                     val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
-                        else getColor(R.color.light_blue)
+                    else getColor(R.color.light_blue)
                     imageViewPin.setColorFilter(pinColor)
                     binding.cardImageViewScanned.setOnClickListener {
                         val arg = bundleOf("scan_id" to scan.scanId.toInt())
@@ -250,19 +256,46 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             }
 
             imageViewSave.setOnClickListener {
-                var editText: String? =null
-                lifecycleScope.launch{
+                if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
+                    AdsLoader.mInterstitialAd?.show(context as Activity)
+                    AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                                var editText: String? =null
+                                lifecycleScope.launch{
 
-                    editText = if (datastore.isHorizontal.first()== VERTICAL){
-                        editTextScanContent2.text.toString()
-                    } else{
-                        editTextScanContent.text.toString()
+                                    editText = if (datastore.isHorizontal.first()== VERTICAL){
+                                        editTextScanContent2.text.toString()
+                                    } else{
+                                        editTextScanContent.text.toString()
+                                    }
+                                }
+                                viewModel.updateScan(
+                                    content = editText!!
+                                )
+                                hideKeyboard()
+                                Globals.TIMER_FINISHED =false
+                                Timers.timer().start()
+                                AdsLoader.displayInterstitial(requireContext())
+                            }
+
+
                     }
+                }else{
+                    var editText: String? =null
+                    lifecycleScope.launch{
+
+                        editText = if (datastore.isHorizontal.first()== VERTICAL){
+                            editTextScanContent2.text.toString()
+                        } else{
+                            editTextScanContent.text.toString()
+                        }
+                    }
+                    viewModel.updateScan(
+                        content = editText!!
+                    )
+                    hideKeyboard()
                 }
-                viewModel.updateScan(
-                    content = editText!!
-                )
-                hideKeyboard()
+
             }
 
             imageViewBack.setOnClickListener {
