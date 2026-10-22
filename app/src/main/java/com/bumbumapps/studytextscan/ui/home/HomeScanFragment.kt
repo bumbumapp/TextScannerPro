@@ -1,5 +1,6 @@
 package com.bumbumapps.studytextscan.ui.home
 
+import com.bumbumapps.studytextscan.InterstitialHelper
 import android.Manifest
 import android.app.Activity
 import android.content.ClipData
@@ -33,16 +34,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
-import com.bumbumapps.studytextscan.AdsLoader
-import com.bumbumapps.studytextscan.Globals
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.bumbumapps.studytextscan.R
-import com.bumbumapps.studytextscan.Timers
 import com.bumbumapps.studytextscan.databinding.FragmentScanHomeBinding
 import com.bumbumapps.studytextscan.util.*
-import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.launch
@@ -126,27 +123,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 id(it.scanId)
                                 scan(it)
                                 onScanClicked {
-                                    if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
-                                        AdsLoader.mInterstitialAd?.show(context as Activity)
-                                        AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                                            override fun onAdDismissedFullScreenContent() {
-
-                                                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                                    reenterTransition =
-                                                        MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                                    val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                                    findNavController().navigate(
-                                                        R.id.action_homeScanFragment_to_detailScanFragment,
-                                                        arg
-                                                    )
-                                                    Globals.TIMER_FINISHED =false
-                                                    Timers.timer().start()
-                                                    AdsLoader.displayInterstitial(requireContext())
-                                                }
-
-
-                                        }
-                                    }else{
+                                    InterstitialHelper.showIfReady(requireActivity()) {
                                         exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                         reenterTransition =
                                             MaterialSharedAxis(MaterialSharedAxis.X, false)
@@ -192,24 +169,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                                 id(it.scanId)
                                 scan(it)
                                 onScanClicked {
-                                    if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
-                                        AdsLoader.mInterstitialAd?.show(context as Activity)
-                                        AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                                            override fun onAdDismissedFullScreenContent() {
-                                                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                                                reenterTransition =
-                                                    MaterialSharedAxis(MaterialSharedAxis.X, false)
-                                                val arg = bundleOf("scan_id" to it.scanId.toInt())
-                                                findNavController().navigate(
-                                                    R.id.action_homeScanFragment_to_detailScanFragment,
-                                                    arg
-                                                )
-                                                Globals.TIMER_FINISHED =false
-                                                Timers.timer().start()
-                                                AdsLoader.displayInterstitial(requireContext())
-                                            }
-                                        }
-                                    }else{
+                                    InterstitialHelper.showIfReady(requireActivity()) {
                                         exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                                         reenterTransition =
                                             MaterialSharedAxis(MaterialSharedAxis.X, false)
@@ -307,17 +267,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         collectFlow(viewModel.events) { homeEvents ->
             when (homeEvents) {
                 is HomeEvents.ShowCurrentScanSaved -> {
-                    if (Globals.TIMER_FINISHED && AdsLoader.mInterstitialAd != null) {
-                        AdsLoader.mInterstitialAd?.show(context as Activity)
-                        AdsLoader.mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                            override fun onAdDismissedFullScreenContent() {
-                                dialogDismiss(loadingDialog,homeEvents)
-                                Globals.TIMER_FINISHED =false
-                                Timers.timer().start()
-                                AdsLoader.displayInterstitial(requireContext())
-                            }
-                        }
-                    }else{
+                    InterstitialHelper.showIfReady(requireActivity()) {
                         dialogDismiss(loadingDialog,homeEvents)
                     }
 
