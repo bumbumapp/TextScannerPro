@@ -22,3 +22,10 @@
  -keepclassmembers class * extends androidx.viewbinding.ViewBinding {
    public static *** bind(android.view.View);
 }
+
+# ViewBindingKotlinModel finds the binding class from its subclasses' generic superclass
+# (ViewBindingKotlinModel<FooBinding>). R8 full mode drops generic signatures of classes that are
+# not kept, which made the release build crash on launch (card #66).
+-keepattributes Signature
+-keep,allowobfuscation,allowoptimization class * extends com.bumbumapps.studytextscan.epoxy.ViewBindingKotlinModel
+-keep,allowobfuscation,allowoptimization class com.bumbumapps.studytextscan.epoxy.ViewBindingKotlinModel
