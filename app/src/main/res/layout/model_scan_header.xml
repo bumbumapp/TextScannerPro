@@ -1,48 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<!-- Home header: large left-aligned title with a quiet scan count underneath. -->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="56dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="16dp">
 
     <TextView
         android:id="@+id/text_view_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_sans_jp_regular"
-        android:gravity="center"
+        android:fontFamily="@font/manrope"
         android:text="@string/your_scans"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="36sp"
+        android:textSize="34sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/guideline3" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.07" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:background="@color/mid_blue"
-        app:layout_constraintTop_toBottomOf="@id/text_view_header" />
+        android:letterSpacing="-0.02" />
 
     <TextView
         android:id="@+id/text_view_num_of_scans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_sans_jp_regular"
-        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/manrope"
         android:textColor="@color/heavy_blue"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/text_view_header"
         tools:text="5 Scans" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

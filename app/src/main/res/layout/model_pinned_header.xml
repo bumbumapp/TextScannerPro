@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     tools:text="Placeholder text"
-    android:fontFamily="@font/roboto_regular"
+    android:fontFamily="@font/manrope"
     android:paddingHorizontal="18dp"
     android:paddingVertical="8dp"
     android:textAllCaps="true">

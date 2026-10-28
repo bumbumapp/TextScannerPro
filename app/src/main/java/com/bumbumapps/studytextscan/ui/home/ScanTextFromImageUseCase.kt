@@ -17,37 +17,32 @@ class ScanTextFromImageUseCase(
     private val filterService: TextFilterService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    // Latin first; each script-specific model also reads Latin, so their results must not be merged.
     private val recognizers = listOf(
-        TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS),
-        TextRecognition.getClient(DevanagariTextRecognizerOptions.Builder().build()),
-        TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build()),
-        TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build()),
-        TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build()),
+        OcrScript.LATIN to TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS),
+        OcrScript.DEVANAGARI to TextRecognition.getClient(DevanagariTextRecognizerOptions.Builder().build()),
+        OcrScript.JAPANESE to TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build()),
+        OcrScript.KOREAN to TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build()),
+        OcrScript.CHINESE to TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build()),
     )
 
     suspend operator fun invoke(image: InputImage) = withContext(dispatcher) {
+        val results = recognizers.mapNotNull { (script, recognizer) ->
+            val result = recognizer.process(image).await()
+            if (result.text.isBlank()) null else Triple(script, result.text, result)
+        }
+        val best = OcrScript.pickBest(results.map { it.first to it.second })
+        val chosen = results.firstOrNull { it.first == best }
         val chips = mutableSetOf<Pair<String, String>>()
-        val detectedText = mutableSetOf<String>()
-
-        for (textRecognizer in recognizers) {
-            val result = textRecognizer.process(image).await()
-
-            if (result.text.isNotBlank()) {
-                detectedText.add(result.text)
-                result.textBlocks.forEach { block ->
-                    block.lines.forEach { line ->
-                        line.elements.forEach { element ->
-                            chips.addAll(filterService.filterTextForEmails(element.text))
-                            chips.addAll(filterService.filterTextForPhoneNumbers(element.text))
-                            chips.addAll(filterService.filterTextForLinks(element.text))
-                        }
-                    }
+        chosen?.third?.textBlocks?.forEach { block ->
+            block.lines.forEach { line ->
+                line.elements.forEach { element ->
+                    chips.addAll(filterService.filterTextForEmails(element.text))
+                    chips.addAll(filterService.filterTextForPhoneNumbers(element.text))
+                    chips.addAll(filterService.filterTextForLinks(element.text))
                 }
             }
         }
-        val completeText = buildString {
-            detectedText.forEach { text -> append(text) }
-        }
-        completeText to chips.toList()
+        (chosen?.second ?: "") to chips.toList()
     }
 }

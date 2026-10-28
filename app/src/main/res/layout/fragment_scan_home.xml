@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fontFamily="@font/noto_sans_jp_regular"
+            android:fontFamily="@font/manrope"
             android:gravity="center"
             android:text="@string/feels_empty_here_create_some_scans" />
 

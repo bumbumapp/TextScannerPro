@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:fontFamily="@font/manrope"
                     android:gravity="start"
                     android:inputType="textCapSentences|textMultiLine"
                     android:textColor="@color/detail_text_title_color"
@@ -151,7 +151,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recycler_view_chips"
             app:layout_constraintStart_toStartOf="parent"
-            android:fontFamily="@font/noto_sans_jp_regular"
+            android:fontFamily="@font/manrope"
             android:gravity="start"
             android:inputType="textCapSentences|textMultiLine"
             android:textColor="@color/detail_text_title_color"
@@ -162,7 +162,7 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:background="@null"-->
-<!--            android:fontFamily="@font/noto_sans_jp_regular"-->
+<!--            android:fontFamily="@font/manrope"-->
 <!--            android:gravity="start"-->
 <!--            android:inputType="textCapSentences"-->
 <!--            android:textColor="@color/detail_text_title_color"-->

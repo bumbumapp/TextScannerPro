@@ -26,7 +26,7 @@
         android:textSize="18sp"
         android:padding="8dp"
         android:layout_marginTop="12dp"
-        android:fontFamily="@font/noto_sans_jp_regular"
+        android:fontFamily="@font/manrope"
         android:textColor="?attr/colorOnSurface"
         />
 

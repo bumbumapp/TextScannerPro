@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/noto_sans_jp_regular"
+        android:fontFamily="@font/manrope"
         android:gravity="center"
         android:padding="6dp"
         android:textColor="?attr/colorOnSurface"
@@ -37,7 +37,7 @@
         android:gravity="center"
         android:textSize="13sp"
         android:padding="8dp"
-        android:fontFamily="@font/noto_sans_jp_regular"
+        android:fontFamily="@font/manrope"
         android:textColor="?attr/colorOnSurface"
         />
 

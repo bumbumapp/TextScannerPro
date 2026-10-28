@@ -16,9 +16,9 @@ android {
         applicationId "com.bumbumapps.textscannerpro"
         minSdk 24
         targetSdk 36
-        // Play: versionCode 7 is live.
-        versionCode 8
-        versionName "1.1.0"
+        // Play: versionCode 7 is live (8 never shipped).
+        versionCode 9
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
