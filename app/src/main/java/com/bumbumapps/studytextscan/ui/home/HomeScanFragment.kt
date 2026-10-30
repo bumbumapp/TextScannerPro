@@ -108,6 +108,9 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     scanHeader {
                         id("scan_header")
                         numOfScans(getString(R.string.num_of_scans, state.itemCount))
+                        onCameraClicked { binding.buttonCameraScan.performClick() }
+                        onGalleryClicked { binding.buttonGalleryScan.performClick() }
+                        onInfoClicked { showAboutDialog() }
                     }
 
                     if (state.isLoading)
@@ -210,14 +213,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
         binding.apply {
             recyclerViewScans.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy > 0) {
-                        buttonCameraScan.hide()
-                        buttonGalleryScan.hide()
-                    }
-                    if (dy < 0) {
-                        buttonCameraScan.show()
-                        buttonGalleryScan.show()
-                    }
+                    // Bento: capture actions live in the header hero/tiles; FABs stay hidden.
                 }
             })
 
@@ -279,13 +275,13 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.no_text_found),
-                        anchor = binding.buttonCameraScan
+                        anchor = null
                     )
                 }
                 is HomeEvents.ShowUndoDeleteScan -> {
                     showSnackbarLongWithAction(
                         message = getString(R.string.scan_deleted),
-                        anchor = binding.buttonCameraScan,
+                        anchor = null,
                         actionText = getString(R.string.undo)
                     ) {
                         viewModel.insertScan(homeEvents.scan)
@@ -297,7 +293,7 @@ class HomeScanFragment : Fragment(R.layout.fragment_scan_home) {
                     loadingDialog.dismiss()
                     showSnackbarShort(
                         message = getString(R.string.something_went_wrong),
-                        anchor = binding.buttonCameraScan
+                        anchor = null
                     )
                 }
                 is HomeEvents.ShowPermissionInfo -> {

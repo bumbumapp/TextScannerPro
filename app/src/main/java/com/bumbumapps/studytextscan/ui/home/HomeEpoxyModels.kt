@@ -29,8 +29,21 @@ abstract class ScanHeaderEpoxyModel :
     @EpoxyAttribute
     var numOfScans: String = ""
 
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    var onCameraClicked: () -> Unit = {}
+
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    var onGalleryClicked: () -> Unit = {}
+
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    var onInfoClicked: () -> Unit = {}
+
     override fun ModelScanHeaderBinding.bind() {
         textViewNumOfScans.text = numOfScans
+        textViewGreeting.setText(greetingRes(java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)))
+        heroCamera.setOnClickListener { onCameraClicked() }
+        tileGallery.setOnClickListener { onGalleryClicked() }
+        buttonInfo.setOnClickListener { onInfoClicked() }
     }
 }
 
@@ -61,6 +74,7 @@ abstract class ScanListItemEpoxyModel :
         }
 
         card.setOnClickListener{onScanClicked(scan)}
+        root.setOnClickListener { onScanClicked(scan) } // whole Bento card opens the scan
        imageViewCopy.setOnClickListener { copyClicked(scan) }
         textViewContent.text = scan.scanText
         textViewContent.setOnClickListener { onScanClicked(scan) }
@@ -86,4 +100,11 @@ abstract class LoadingScansEpoxyModel :
     ViewBindingKotlinModel<ModelScanLoadingBarBinding>(R.layout.model_scan_loading_bar) {
 
     override fun ModelScanLoadingBarBinding.bind() {}
+}
+
+/** Time-of-day greeting for the Bento header. */
+fun greetingRes(hour: Int): Int = when (hour) {
+    in 5..11 -> R.string.greet_morning
+    in 12..17 -> R.string.greet_afternoon
+    else -> R.string.greet_evening
 }

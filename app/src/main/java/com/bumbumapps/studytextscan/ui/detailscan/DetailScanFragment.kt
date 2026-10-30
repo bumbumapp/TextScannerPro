@@ -93,7 +93,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 
 
                     val pinColor = if (scan.isPinned) getColor(R.color.heavy_blue)
-                    else getColor(R.color.light_blue)
+                    else getColor(R.color.text_gray)
                     imageViewPin.setColorFilter(pinColor)
                     binding.cardImageViewScanned.setOnClickListener {
                         val arg = bundleOf("scan_id" to scan.scanId.toInt())
@@ -190,23 +190,13 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
                         title = getString(R.string.save_changes),
                         message = getString(R.string.unsaved_changes),
                         onPositiveClick = {
-                            binding.apply {
-                                var editText: String? =null
-                                lifecycleScope.launch{
-
-                                    editText = if (datastore.isHorizontal.first()== VERTICAL){
-                                        editTextScanContent2.text.toString()
-                                    } else{
-                                        editTextScanContent.text.toString()
-                                    }
-                                }
-
-                                viewModel.updateScan(
-                                    content = editText!!
-                                )
+                            // The text is read after the layout-mode lookup completes (it suspends), so the
+                            // update and navigation run inside the coroutine; reading it outside threw an NPE.
+                            lifecycleScope.launch {
+                                viewModel.updateScan(content = currentContent())
+                                hideKeyboard()
+                                findNavController().navigateUp()
                             }
-                            hideKeyboard()
-                            findNavController().navigateUp()
                         },
                         onNegativeClick = {
                             hideKeyboard()
@@ -226,20 +216,8 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         imageViewBack does.
          */
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            binding.apply {
-                var editText1: String? =null
-                lifecycleScope.launch{
-
-                    editText1 = if (datastore.isHorizontal.first()== VERTICAL){
-                        editTextScanContent2.text.toString()
-                    } else{
-                        editTextScanContent.text.toString()
-                    }
-                }
-                viewModel.onNavigateUp(
-                    content = editText1!!
-                )
-            }
+            // System back used to crash (NPE): the content was read before the suspending lookup finished.
+            lifecycleScope.launch { viewModel.onNavigateUp(content = currentContent()) }
         }
 
 
@@ -249,41 +227,19 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         binding.apply {
             imageViewPin.setOnClickListener {
                 viewModel.updateScanPinned()
-                imageViewPin.setColorFilter(getColor(R.color.light_blue))
+                imageViewPin.setColorFilter(getColor(R.color.text_gray))
             }
 
             imageViewSave.setOnClickListener {
                 InterstitialHelper.showIfReady(requireActivity()) {
-                    var editText: String? =null
-                    lifecycleScope.launch{
-
-                        editText = if (datastore.isHorizontal.first()== VERTICAL){
-                            editTextScanContent2.text.toString()
-                        } else{
-                            editTextScanContent.text.toString()
-                        }
-                    }
-                    viewModel.updateScan(
-                        content = editText!!
-                    )
+                    lifecycleScope.launch { viewModel.updateScan(content = currentContent()) }
                     hideKeyboard()
                 }
 
             }
 
             imageViewBack.setOnClickListener {
-                var editText: String? =null
-                lifecycleScope.launch{
-
-                    editText = if (datastore.isHorizontal.first()== VERTICAL){
-                        editTextScanContent2.text.toString()
-                    } else{
-                        editTextScanContent.text.toString()
-                    }
-                }
-                viewModel.onNavigateUp(
-                    content = editText!!
-                )
+                lifecycleScope.launch { viewModel.onNavigateUp(content = currentContent()) }
             }
 
             imageViewDelete.setOnClickListener {
@@ -300,40 +256,25 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
             imageViewCopy.setOnClickListener {
                 val clipboardManager =
                     requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                var editText: String? =null
-                lifecycleScope.launch{
-
-                    editText = if (datastore.isHorizontal.first()== VERTICAL){
-                        editTextScanContent2.text.toString()
-                    } else{
-                        editTextScanContent.text.toString()
-                    }
+                // Copy/share used to send null: the text was read before the suspending lookup finished.
+                lifecycleScope.launch {
+                    clipboardManager.setPrimaryClip(ClipData.newPlainText("raw_data", currentContent()))
+                    showSnackbarShort(
+                        message = getString(R.string.copied_clip),
+                        anchor = binding.imageViewTranslate
+                    )
                 }
-                val clip = ClipData.newPlainText("raw_data", editText)
-                clipboardManager.setPrimaryClip(clip)
-                showSnackbarShort(
-                    message = getString(R.string.copied_clip),
-                    anchor = binding.imageViewTranslate
-                )
             }
 
             imageViewShare.setOnClickListener {
-                var editText: String? =null
-                lifecycleScope.launch{
-
-                    editText = if (datastore.isHorizontal.first()== VERTICAL){
-                        editTextScanContent2.text.toString()
-                    } else{
-                        editTextScanContent.text.toString()
+                lifecycleScope.launch {
+                    val shareIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, currentContent())
+                        type = "text/plain"
                     }
+                    startActivity(Intent.createChooser(shareIntent, null))
                 }
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, editText)
-                    type = "text/plain"
-                }
-                val intent = Intent.createChooser(shareIntent, null)
-                startActivity(intent)
             }
 
             imageViewVoice.setOnClickListener {
@@ -401,6 +342,13 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
         super.onDestroyView()
     }
 
+    /** Text of the editor that is currently shown (vertical or horizontal layout mode). */
+    private suspend fun currentContent(): String = pickContent(
+        AppPreferences(requireContext().datastore).isHorizontal.first(),
+        horizontal = binding.editTextScanContent.text.toString(),
+        vertical = binding.editTextScanContent2.text.toString()
+    )
+
     private fun processFilteredModelIntent(type: String, content: String) {
         try {
             when (type) {
@@ -437,3 +385,7 @@ class DetailScanFragment : Fragment(R.layout.fragment_scan_detail) {
 }
 
 
+
+/** Picks the editor text that matches the stored layout mode. */
+internal fun pickContent(mode: String?, horizontal: String, vertical: String): String =
+    if (mode == VERTICAL) vertical else horizontal

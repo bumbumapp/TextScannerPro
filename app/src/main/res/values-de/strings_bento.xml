@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bento_home_title">Deine Scans</string>
+    <string name="bento_about">Info</string>
+    <string name="bento_hero_title">Text scannen</string>
+    <string name="bento_hero_sub">Kamera auf eine Seite richten</string>
+    <string name="bento_from_gallery">Aus der Galerie</string>
+    <string name="bento_recent">Letzte Scans</string>
+    <string name="greet_morning">Guten Morgen</string>
+    <string name="greet_afternoon">Guten Tag</string>
+    <string name="greet_evening">Guten Abend</string>
+    <string name="bento_share">Teilen</string>
+</resources>

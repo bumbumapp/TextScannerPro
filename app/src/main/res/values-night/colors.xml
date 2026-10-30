@@ -4,15 +4,4 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="icon_color">#ffffff</color>
-
-    <color name="background">#131418</color>
-
-    <color name="bottom_bar_color">#1C1E24</color>
-    <color name="bottom_icon_color">#8FA2FF</color>
-    <color name="detail_text_title_color">#e1f5fe</color>
-
-    <color name="scan_item_background">#1C1E24</color>
-    <color name="scan_item_text">#e1f5fe</color>
-
 </resources>

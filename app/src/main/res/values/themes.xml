@@ -1,21 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.StudyTextScan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/mid_blue</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/mid_blue</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="android:fontFamily">@font/manrope</item>
-        <item name="fontFamily">@font/manrope</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" >@color/background</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:navigationBarColor">@color/background</item>
-        <!-- Customize your theme here. -->
+    <style name="Theme.StudyTextScan" parent="Theme.Bento">
+        <item name="android:statusBarColor">@color/bento_surface</item>
+        <item name="android:navigationBarColor">@color/bento_surface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Bento.Dialog</item>
     </style>
 
     <!-- Customization for the alert dialog. -->
@@ -26,10 +16,10 @@
         <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
         <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>
-        <item name="colorPrimary">@color/background</item>
-        <item name="colorSecondary">@color/background</item>
-        <item name="colorSurface">@color/background</item>
-        <item name="colorOnSurface">@color/background</item>
+        <item name="colorPrimary">@color/bento_primary</item>
+        <item name="colorSecondary">@color/bento_primary</item>
+        <item name="colorSurface">@color/bento_surfaceContainerLowest</item>
+        <item name="colorOnSurface">@color/bento_onSurface</item>
     </style>
 
     <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.MaterialComponents">
@@ -37,13 +27,13 @@
     </style>
 
     <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/jakarta_bold</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="MaterialAlertDialog.App.Title.Body" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/jakarta_bold</item>
         <item name="android:textSize">14sp</item>
     </style>
 

@@ -22,10 +22,10 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_layout_empty"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="200dp"
         android:layout_gravity="center"
+        android:layout_marginTop="440dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -43,14 +43,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fontFamily="@font/manrope"
+            android:fontFamily="@font/jakarta_medium"
             android:gravity="center"
+            android:textAppearance="@style/Bento.Text.BodySmall"
             android:text="@string/feels_empty_here_create_some_scans" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_gallery_scan"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -67,6 +69,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_camera_scan"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -82,6 +85,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
     <ImageView
         android:id="@+id/info"
+        android:visibility="gone"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:src="@drawable/ic_info"

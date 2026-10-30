@@ -8,20 +8,20 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="text_gray">#5F6470</color>
+    <color name="text_gray">@color/bento_onSurfaceVariant</color>
 
-    <color name="background">#F7F8FA</color>
+    <color name="background">@color/bento_surface</color>
 
-    <color name="icon_color">#000000</color>
+    <color name="icon_color">@color/bento_onSurface</color>
 
-    <color name="light_blue">#EEF1FD</color>
-    <color name="heavy_blue">#2F4BD8</color>
-    <color name="mid_blue">#3B5BDB</color>
+    <color name="light_blue">@color/bento_primaryContainer</color>
+    <color name="heavy_blue">@color/bento_primary</color>
+    <color name="mid_blue">@color/bento_primary</color>
 
-    <color name="bottom_bar_color">#ffffff</color>
-    <color name="bottom_icon_color">#2F4BD8</color>
+    <color name="bottom_bar_color">@color/bento_surfaceContainerLowest</color>
+    <color name="bottom_icon_color">@color/bento_primary</color>
 
-    <color name="detail_text_title_color">#14161C</color>
+    <color name="detail_text_title_color">@color/bento_onSurface</color>
 
     <color name="error_red">#c62828</color>
 
@@ -29,7 +29,7 @@
     <color name="chip_yellow">#ffd600</color>
     <color name="chip_orange">#ff6d00</color>
 
-    <color name="scan_item_background">#ffffff</color>
-    <color name="scan_item_text">#14161C</color>
+    <color name="scan_item_background">@color/bento_surfaceContainerLowest</color>
+    <color name="scan_item_text">@color/bento_onSurface</color>
 
 </resources>

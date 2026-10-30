@@ -15,72 +15,80 @@
 
         <ImageView
             android:id="@+id/image_view_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginBottom="12dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/ts_square_btn"
             android:src="@drawable/ic_round_arrow_back_24"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" 
+            app:tint="?attr/colorOnSurface"
+            android:padding="11dp"/>
 
         <ImageView
             android:id="@+id/image_view_delete"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginEnd="18dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/ts_square_btn"
             android:src="@drawable/ic_round_delete_24"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
-            app:layout_constraintEnd_toStartOf="@id/image_view_save" />
+            app:layout_constraintEnd_toStartOf="@id/image_view_save" 
+            android:padding="11dp"/>
 
         <ImageView
             android:id="@+id/image_view_save"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@id/settings"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
             android:src="@drawable/ic_round_done_24"
             android:background="@drawable/save_button_background"
+            app:tint="@color/bento_onPrimary"
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            />
+            
+            android:padding="11dp"/>
         <ImageView
             android:id="@+id/settings"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginBottom="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
             android:src="@drawable/ic_more"
-            app:tint="@color/heavy_blue"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            />
+            android:background="@drawable/ts_square_btn"
+            app:tint="?attr/colorOnSurface"
+            
+            android:padding="11dp"/>
 
         <ImageView
             android:id="@+id/image_view_pin"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@id/image_view_delete"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
             android:src="@drawable/ic_round_push_pin_24"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            />
+            android:background="@drawable/ts_square_btn"
+            
+            android:padding="11dp"/>
 
         <ImageView
             android:id="@+id/image_view_pdf"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@id/image_view_pin"
             app:layout_constraintBottom_toTopOf="@id/guideline5"
             android:src="@drawable/ic_round_picture_as_pdf_24"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            />
+            android:background="@drawable/ts_square_btn"
+            
+            android:padding="11dp"/>
 
         <TextView
             android:id="@+id/text_view_date_created"
@@ -131,11 +139,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:fontFamily="@font/manrope"
                     android:gravity="start"
                     android:inputType="textCapSentences|textMultiLine"
                     android:textColor="@color/detail_text_title_color"
                     android:textSize="17sp"
+                    android:fontFamily="@font/jakarta_medium"
+                    android:lineSpacingMultiplier="1.15"
                     tools:text="Placeholder content of a scan" />
 
             </androidx.core.widget.NestedScrollView>
@@ -151,18 +160,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recycler_view_chips"
             app:layout_constraintStart_toStartOf="parent"
-            android:fontFamily="@font/manrope"
+            android:fontFamily="@font/jakarta_medium"
             android:gravity="start"
             android:inputType="textCapSentences|textMultiLine"
             android:textColor="@color/detail_text_title_color"
             android:textSize="17sp"
+                    android:lineSpacingMultiplier="1.15"
             tools:text="Placeholder content of a scan" />
 <!--        <EditText-->
 <!--            android:id="@+id/edit_text_scan_title"-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:background="@null"-->
-<!--            android:fontFamily="@font/manrope"-->
+<!--            android:fontFamily="@font/jakarta_medium"-->
 <!--            android:gravity="start"-->
 <!--            android:inputType="textCapSentences"-->
 <!--            android:textColor="@color/detail_text_title_color"-->
@@ -192,7 +202,7 @@
             app:cardElevation="5dp"
             app:cardCornerRadius="14dp"
             android:layout_marginEnd="10dp"
-            app:strokeColor="#8BC34A"
+            app:strokeColor="@color/bento_primary"
             app:strokeWidth="2dp"
             android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="@id/guideline6"
@@ -217,42 +227,46 @@
         android:layout_gravity="center|bottom"
         android:background="@drawable/bottom_bar_background"
         android:orientation="horizontal"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:layout_margin="8dp"
-        android:elevation="4dp">
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:layout_margin="16dp"
+        android:elevation="0dp">
 
         <ImageView
             android:id="@+id/image_view_copy"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_round_content_copy_24" />
+            android:src="@drawable/ic_round_content_copy_24" 
+            app:tint="?attr/colorPrimary"/>
 
         <ImageView
             android:id="@+id/image_view_share"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_round_share_24" />
+            android:src="@drawable/ic_round_share_24" 
+            app:tint="?attr/colorPrimary"/>
 
         <ImageView
             android:id="@+id/image_view_voice"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_round_record_voice_over_24" />
+            android:src="@drawable/ic_round_record_voice_over_24" 
+            app:tint="?attr/colorPrimary"/>
 
         <ImageView
             android:id="@+id/image_view_translate"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_round_g_translate_24" />
+            android:src="@drawable/ic_round_g_translate_24" 
+            app:tint="?attr/colorPrimary"/>
 
     </LinearLayout>
 

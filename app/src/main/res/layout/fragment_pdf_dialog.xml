@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="@string/customize_your_export"
             app:layout_constraintTop_toTopOf="parent"
-            android:fontFamily="@font/manrope"
+            android:fontFamily="@font/jakarta_medium"
             android:textColor="@color/heavy_blue"
             android:textSize="18sp"
             android:textStyle="bold"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bento_home_title">Your scans</string>
+    <string name="bento_about">About</string>
+    <string name="bento_hero_title">Scan text</string>
+    <string name="bento_hero_sub">Point the camera at any page</string>
+    <string name="bento_from_gallery">From gallery</string>
+    <string name="bento_recent">Recent scans</string>
+    <string name="greet_morning">Good morning</string>
+    <string name="greet_afternoon">Good afternoon</string>
+    <string name="greet_evening">Good evening</string>
+    <string name="bento_share">Share</string>
+</resources>
