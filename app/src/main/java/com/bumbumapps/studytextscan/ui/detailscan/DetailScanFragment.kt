@@ -28,7 +28,6 @@ import com.bumbumapps.studytextscan.datastore.datastore
 import com.bumbumapps.studytextscan.persistence.database.converters.DateConverter.toBitmap
 import com.bumbumapps.studytextscan.service.pdfExport.PdfExportServiceImpl
 import com.bumbumapps.studytextscan.util.*
-import com.google.android.gms.ads.AdListener
 import com.google.android.material.transition.MaterialSharedAxis
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

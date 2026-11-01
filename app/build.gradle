@@ -8,6 +8,17 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+// Huawei Ads (Petal) slot IDs for the AppGallery build: -PHMS_BANNER_ID=... or a gitignored ads.properties.
+// Until the real slots are set the hms build falls back to Huawei's public test slots.
+def adsProps = new Properties()
+def adsPropsFile = rootProject.file('ads.properties')
+if (adsPropsFile.exists()) adsPropsFile.withInputStream { adsProps.load(it) }
+def adId = { String key, String fallback -> ((project.findProperty(key) ?: adsProps.getProperty(key))?.toString()?.trim()) ?: fallback }
+def HMS_TEST_BANNER_ID = 'testw6vs28auh3'
+def HMS_TEST_INTERSTITIAL_ID = 'testb4znbuh3n2'
+def HMS_BANNER_ID = adId('HMS_BANNER_ID', HMS_TEST_BANNER_ID)
+def HMS_INTERSTITIAL_ID = adId('HMS_INTERSTITIAL_ID', HMS_TEST_INTERSTITIAL_ID)
+
 android {
     namespace 'com.bumbumapps.studytextscan'
     compileSdk 36
@@ -21,6 +32,20 @@ android {
         versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    // play = Google Play (AdMob + UMP), hms = Huawei AppGallery (Huawei Ads, no Google Mobile Services).
+    flavorDimensions = ['store']
+    productFlavors {
+        play {
+            dimension 'store'
+        }
+        hms {
+            dimension 'store'
+            resValue 'string', 'hms_banner_id', HMS_BANNER_ID
+            resValue 'string', 'hms_interstitial_id', HMS_INTERSTITIAL_ID
+            resValue 'string', 'hms_test_banner_id', HMS_TEST_BANNER_ID
+            resValue 'string', 'hms_test_interstitial_id', HMS_TEST_INTERSTITIAL_ID
+        }
     }
     splits {
         // Configures multiple APKs based on ABI.
@@ -162,8 +187,9 @@ dependencies {
     implementation "br.com.devsrsouza.compose.icons.android:line-awesome:1.0.0"
 
     //ads
-    implementation 'com.google.android.gms:play-services-ads:25.5.0'
-    implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
+    playImplementation 'com.google.android.gms:play-services-ads:25.5.0'
+    playImplementation 'com.google.android.ump:user-messaging-platform:4.0.0'
+    hmsImplementation 'com.huawei.hms:ads-lite:13.4.91.301'
     implementation platform('com.google.firebase:firebase-bom:34.4.0')
 
     // Add the dependencies for the Crashlytics and Analytics libraries

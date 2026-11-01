@@ -29,3 +29,8 @@
 -keepattributes Signature
 -keep,allowobfuscation,allowoptimization class * extends com.bumbumapps.studytextscan.epoxy.ViewBindingKotlinModel
 -keep,allowobfuscation,allowoptimization class com.bumbumapps.studytextscan.epoxy.ViewBindingKotlinModel
+
+# Huawei Ads (hms flavor)
+-keep class com.huawei.openalliance.ad.** { *; }
+-keep class com.huawei.hms.ads.** { *; }
+-dontwarn com.huawei.**
